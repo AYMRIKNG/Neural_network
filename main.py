@@ -2,6 +2,7 @@ from data import load_data
 from model import train, predict
 import numpy as np
 from sklearn.datasets import load_iris
+import matplotlib.pyplot as plt
 
 def main():
     X_train, X_test, y_train, y_test = load_data()
@@ -9,7 +10,14 @@ def main():
     layer_sizes = [4, 8, 6, 3]
 
     print("Entraînement du modèle...")
-    parameters = train(X_train, y_train, layer_sizes, epochs=5000, learning_rate=0.05)
+    parameters, losses = train(X_train, y_train, layer_sizes, epochs=5000, learning_rate=0.05)
+
+
+    plt.plot(losses)
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.title('Courbe de perte pendant l\'entraînement')
+    plt.show()
 
     y_pred = predict(X_test, parameters)
     y_true = np.argmax(y_test, axis=1)

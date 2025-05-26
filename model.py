@@ -1,5 +1,6 @@
 import numpy as np
 from utils import sigmoid, sigmoid_derivative, relu, relu_derivative, softmax, cross_entropy_loss
+import matplotlib.pyplot as plt
 
 def initialize_parameters(layer_sizes):
     parameters = {}
@@ -47,15 +48,17 @@ def update_parameters(parameters, grads, learning_rate):
 
 def train(X, y, layer_sizes, epochs=10000, learning_rate=0.05, activation="relu", verbose=True):
     parameters = initialize_parameters(layer_sizes)
+    losses = []  # Liste pour stocker la perte à chaque epoch
     for i in range(epochs):
         cache = forward_propagation(X, parameters, activation)
         y_pred = cache[f"A{len(layer_sizes)-1}"]
         loss = cross_entropy_loss(y, y_pred)
-        if verbose and i % 1000 == 0:
+        losses.append(loss)
+        if verbose and i % 100 == 0:
             print(f"Epoch {i}, Loss: {loss:.4f}")
         grads = backward_propagation(y, parameters, cache, activation)
         parameters = update_parameters(parameters, grads, learning_rate)
-    return parameters
+    return parameters, losses
 
 def predict(X, parameters):
     cache = forward_propagation(X, parameters)
